@@ -1,0 +1,78 @@
+
+let expenses = [];
+let total = 0;
+
+// Add Expense
+function addExpense() {
+
+    let name = document.getElementById("name").value.trim();
+    let amount = Number(document.getElementById("amount").value);
+    let category = document.getElementById("category").value;
+
+    if (name === "" || document.getElementById("amount").value === "" || category === "") {
+        alert("Please fill all fields");
+        return;
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        alert("Enter valid amount");
+        return;
+    }
+
+    let expense = {
+        name: name,
+        amount: amount,
+        category: category
+    };
+
+    expenses.push(expense);
+
+    document.getElementById("name").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("category").value = "";
+
+    showExpenses();
+}
+
+
+// Display Expenses
+function showExpenses() {
+
+    let list = document.getElementById("list");
+    let filter = document.getElementById("filter").value;
+
+    list.innerHTML = "";
+    total = 0;
+
+    for (let i = 0; i < expenses.length; i++) {
+
+        total += expenses[i].amount;
+
+        if (filter === "All" || filter === expenses[i].category) {
+
+            let div = document.createElement("div");
+
+            div.className = "expense";
+
+            div.innerHTML =
+                expenses[i].name + "<br>" +
+                "Amount: ₹" + expenses[i].amount + "<br>" +
+                "Category: " + expenses[i].category;
+
+            let btn = document.createElement("button");
+
+            btn.innerText = "Delete";
+            btn.className = "delete";
+
+            btn.onclick = function() {
+                expenses.splice(i, 1);
+                showExpenses();
+            };
+
+            div.appendChild(btn);
+            list.appendChild(div);
+        }
+    }
+
+    document.getElementById("total").innerText = total.toFixed(2);
+}
